@@ -9,6 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "dev": "npx tsc --watch ./index.ts --skipLibCheck",
+    "dev:run": "tsx --watch index.ts",
+    "start": "node dist/index.js",
+    "build": "npx tsc --skipLibCheck --noUnusedLocals false",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": true,
@@ -19,12 +22,15 @@
     "@eslint/js": "^9.38.0",
     "@stylistic/eslint-plugin": "^5.5.0",
     "@types/react": "^19.2.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
+    "@typescript-eslint/utils": "^8.46.2",
     "eslint": "^9.38.0",
     "eslint-plugin-codegen": "^0.34.1",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-sort-destructure-keys": "^2.0.0"
+    "eslint-plugin-sort-destructure-keys": "^2.0.0",
+    "tsx": "^4.20.6"
   },
   "dependencies": {
     "@effect/language-service": "^0.52.1",
