@@ -9,15 +9,12 @@ const slow = Effect.gen(function* () {
     yield* new CustomErrors()
     yield* Effect.log('slow')
     return 50
-}).pipe(
-    Effect.onInterrupt(() => Effect.log('interrupted'))
-)
+})
 
 const hello = Effect.gen(function* () {
     yield * Effect.log('Before fork')
     const fiber = yield* Effect.fork(slow)
-    yield* Fiber.interrupt(fiber)
-    console.log()
+    const exit = yield* fiber.await
     yield* Effect.log('after fork')
 })
 
