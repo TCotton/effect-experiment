@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.js",
   "packageManager": "pnpm@10.0.0",
+  "files": ["dist", "README.md"],
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

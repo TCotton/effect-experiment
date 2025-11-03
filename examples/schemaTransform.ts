@@ -1,16 +1,14 @@
-
 import { Effect, Schema } from 'effect'
 
-const StringOrNumberFromString =
-    Schema.transform(
-        Schema.String,
-        Schema.Number,
-        {
-            strict: false,
-            decode: (string) => Number(string),
-            encode: (number) => String(number)
-        }
-    ).pipe(Schema.asSchema)
+const StringOrNumberFromString = Schema.transform(
+  Schema.String,
+  Schema.Number,
+  {
+    strict: false,
+    decode: (string) => Number(string),
+    encode: (number) => String(number)
+  }
+).pipe(Schema.asSchema)
 
 type Decoded = typeof StringOrNumberFromString.Type
 type Encoded = typeof StringOrNumberFromString.Encoded
