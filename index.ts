@@ -1,17 +1,17 @@
-import { Effect } from 'effect'
+import { Effect, Array } from "effect"
 
-declare const openReport: Effect.Effect<{
-    readonly path: string;
-    readonly close: () => Promise<void>
-}>
+const makeTask = (index: number) =>
+    Effect.gen(function*() {
+        yield* Effect.sleep("200 millis")
+        yield* Effect.log(`Task ${index} finished`)
+    })
 
 const program = Effect.gen(function*() {
-    yield* Effect.acquireUseRelease(
-        openReport,
-        (handle) => Effect.log(`${handle.path}`),
-        (handle) => Effect.promise(() => handle.close())
-    )
+    const tasks = Array.makeBy(10, (i) => makeTask(i))
+    yield* Effect.all(tasks, { concurrency: 2 })
 })
 
-// Run the program
-Effect.runPromise(program).then(() => console.log('Program completed'))
+
+Effect.runPromise(program)
+
+
