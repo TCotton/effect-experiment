@@ -10,7 +10,7 @@ import type {
     EndpointHandler,
     Method,
     ProvideHandler,
-} from "./types.ts";
+} from "./types.js";
 import { Router } from "./router.js";
 
 export const makeEndpoint = <
@@ -41,14 +41,34 @@ export const makeEndpoint = <
         BuildR
     >;
 }): Layer.Layer<
-    never,
+    never, // why never? because we don't need to keep anything from the build effect'
     BuildE,
-    Router | Exclude<BuildR, Scope.Scope>
+    Router | Exclude<BuildR, Scope.Scope> //
+    /*
+    Router - This indicates that the Effect requires a Router service to be provided in the environment.
+
+    Exclude<BuildR, Scope.Scope> - This is a TypeScript utility type that:
+
+    Takes the generic BuildR type (which represents the requirements that the build function might need)
+    Excludes any Scope.Scope requirements from it
+    Returns everything in BuildR except Scope.Scope
+    Router | Exclude<BuildR, Scope.Scope> - The union combines both:
+
+    The Router requirement (always needed)
+    Any other requirements from BuildR except Scope.Scope
+    Why exclude Scope.Scope?
+    The exclusion of Scope.Scope is crucial because:
+
+    The makeEndpoint function uses Layer.effectDiscard which automatically provides scope management
+    When you use Layer.effectDiscard or similar Layer constructors, they handle the Scope internally
+    If Scope.Scope wasn't excluded, it would create a type mismatch where the Effect expects a Scope to be provided externally, but the Layer is already managing it internally
+    This is a sophisticated way of saying: "This Effect needs a Router, plus whatever else the build function needs, but don't worry about Scope management - we'll handle that for you."
+     */
 > =>
-    Layer.scopedDiscard(
+    Layer.scopedDiscard( // why scopedDiscard? because we don't need to keep anything from the build effect
         Effect.gen(function* () {
             const router = yield* Router;
-            const handler = yield* options.build(identity);
+            const handler = yield* options.build(identity); // what does identity do here? it just returns the handler as is
 
             yield* router.register({
                 method: options.method,
