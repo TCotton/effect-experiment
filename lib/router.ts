@@ -1,4 +1,5 @@
 import {Context, Effect, Layer} from 'effect';
+import type {Schema} from 'effect';
 import type {
     AnyRegisteredEndpoint,
     AnySchema, RegisteredEndpoint, Method
@@ -12,7 +13,7 @@ export declare namespace Router {
     export type Type = {
         readonly register: <
             PayloadSchema extends AnySchema,
-            SuccessSchema extends AnySchema,
+            SuccessSchema extends Schema.Schema.AnyNoContext,
             FailureSchema extends AnySchema,
         >(
             endpoint: RegisteredEndpoint<
@@ -21,6 +22,7 @@ export declare namespace Router {
                 FailureSchema
             >,
         ) => Effect.Effect<void>
+        readonly find: (method: Method, path: string) => Effect.Effect<AnyRegisteredEndpoint | undefined>
         readonly endpoints: Effect.Effect<
             ReadonlyArray<AnyRegisteredEndpoint>
         >
@@ -43,6 +45,7 @@ export class Router extends Context.Tag("@capstone/Router")<
                 // could us generator and yield but for simplicity just return void
                 return Effect.void;
             },
+            find:( method: Method, path: string) => Effect.sync(() => routes.get(makeRouteKey(method, path) )),
             endpoints: Effect.sync(() => Array.from(routes.values()))
         });
     })

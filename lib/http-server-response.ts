@@ -7,7 +7,7 @@ export type HTTPServerResponse = {
 export const json = (
     status: number,
     body: string
-):HTTPServerResponse => ({
+): HTTPServerResponse => ({
     status,
     headers: {
         'Content-Type': 'application/json'
@@ -26,3 +26,7 @@ export const internalError = () => HTTPServerResponse => ({
     status: 500,
     body: "Internal Server Error"
 })
+
+export const notImplemented = () => HTTPServerResponse => ({status: 501, body: "Not Implemented"})
+
+export const badRequest = () => HTTPServerResponse => ({status: 400, body: "Bad Request"})
